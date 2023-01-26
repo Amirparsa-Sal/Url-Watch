@@ -58,13 +58,26 @@ class UrlRegisterViewSet(ViewSet):
     @authenticated
     def retrieve(self, request, pk=None):
         ''' GET: /api/url/<pk> '''
+        # check if the url exists and belongs to the user
         try:
             url = request.user.urls.get(pk=pk)
         except Url.DoesNotExist:
             return Response({'error': 'Url does not exist'}, status=status.HTTP_404_NOT_FOUND)
-        
+        # return the url
         serializer = UrlSerializer(url)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+    @authenticated
+    def delete(self, request, pk=None):
+        ''' DELETE: /api/url/<pk> '''
+        # check if the url exists and belongs to the user
+        try:
+            url = request.user.urls.get(pk=pk)
+        except Url.DoesNotExist:
+            return Response({'error': 'Url does not exist'}, status=status.HTTP_404_NOT_FOUND)
+        # delete the url
+        url.delete()
+        return Response(None, status=status.HTTP_204_NO_CONTENT)
 
 
 class WarningViewset(ViewSet):
@@ -74,10 +87,12 @@ class WarningViewset(ViewSet):
 
     @authenticated
     def list(self, request, pk=None):
-        ''' GET: /api/url/<int:pk>/warnings '''
+        ''' GET: /api/url/<pk>/warnings '''
+        # check if the url exists and belongs to the user
         try:
             url = request.user.urls.get(pk=pk)
         except Url.DoesNotExist:
             return Response({'error': 'Url does not exist'}, status=status.HTTP_404_NOT_FOUND)
+        # return the warnings
         serializer = WarningSerializer(url.warnings.all(), many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
