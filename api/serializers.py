@@ -21,11 +21,12 @@ class UrlCompactSerializer(serializers.ModelSerializer):
     ''' Serializer for showing a list of urls'''
     class Meta:
         model = Url
-        fields = ('id', 'url')
+        fields = ('id', 'url', 'threshold')
 
 class WarningSerializer(serializers.ModelSerializer):
     ''' Serializer for showing a list of warnings'''
+    url_id = serializers.IntegerField(source='url.id')
     class Meta:
         model = Warning
-        fields = ('id', 'created_at', 'result_code')
+        fields = ('id', 'url', 'created_at', 'result_code')
         
