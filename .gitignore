@@ -1,3 +1,4 @@
 url_watch/.env
 *.pyc
 db.sqlite3
+env/
