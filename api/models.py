@@ -43,10 +43,8 @@ class Url(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='urls')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    count = models.IntegerField(default=0)
+    failed_times = models.IntegerField(default=0)
     threshold = models.IntegerField()
 
     def __str__(self):
         return self.url
-    
-
