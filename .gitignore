@@ -3,3 +3,4 @@ url_watch/.env
 db.sqlite3
 env/
 celerybeat-schedule
+.DS_STORE
