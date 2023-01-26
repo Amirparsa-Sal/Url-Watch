@@ -7,7 +7,7 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 
 from api.serializers import UserRegisterSerializer, UrlSerializer, UrlCompactSerializer, WarningSerializer
 from api.utility import authenticated
-from api.models import Url
+from api.models import Url, Warning
 
 class UserRegisterViewSet(ViewSet):
     '''A view for registering a user using email, first_name, last_name, and password'''    
@@ -86,13 +86,10 @@ class WarningViewset(ViewSet):
     authentication_classes = (JWTAuthentication,)
 
     @authenticated
-    def list(self, request, pk=None):
-        ''' GET: /api/url/<pk>/warnings '''
-        # check if the url exists and belongs to the user
-        try:
-            url = request.user.urls.get(pk=pk)
-        except Url.DoesNotExist:
-            return Response({'error': 'Url does not exist'}, status=status.HTTP_404_NOT_FOUND)
+    def list(self, request):
+        ''' GET: /api/url/warning '''
+        # join the url and warning tables
+        warnings = Warning.objects.filter(url__user=request.user)
         # return the warnings
-        serializer = WarningSerializer(url.warnings.all(), many=True)
+        serializer = WarningSerializer(warnings, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)

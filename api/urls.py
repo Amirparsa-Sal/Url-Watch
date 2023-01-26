@@ -12,5 +12,5 @@ urlpatterns = [
     path('url/', UrlRegisterViewSet.as_view({'put':'create', 'get':'list'}), name='url'),
     path('url/<int:pk>', UrlRegisterViewSet.as_view({'get':'retrieve', 'delete':'delete'}), name='url'),
     ##### WARNING #####
-    path('url/<int:pk>/warning', WarningViewset.as_view({'get':'list'}), name='warning'),
+    path('warning/', WarningViewset.as_view({'get':'list'}), name='warning'),
 ]
