@@ -1,9 +1,13 @@
+from django.contrib.auth import get_user_model
+
 from rest_framework.response import Response
 from rest_framework.viewsets import ViewSet
 from rest_framework import status
-from django.contrib.auth import get_user_model
-from api.serializers import *
+from rest_framework_simplejwt.authentication import JWTAuthentication
 
+from api.serializers import UserRegisterSerializer, UrlSerializer, UrlCompactSerializer
+from api.utility import authenticated
+from api.models import Url
 
 class UserRegisterViewSet(ViewSet):
     '''A view for registering a user using email, first_name, last_name, and password'''    
@@ -21,11 +25,42 @@ class UserRegisterViewSet(ViewSet):
         if self.user_model.objects.filter(email=serializer.data['email']).exists():
             return Response({'error': 'User already exists'}, status=status.HTTP_400_BAD_REQUEST)
         # create the user
-        user = self.user_model.objects.create_user(**serializer.data)
+        self.user_model.objects.create_user(**serializer.data)
         return Response(None, status=status.HTTP_201_CREATED)
 
 
-    
+class UrlRegisterViewSet(ViewSet):
+    '''A view for working with entered urls for a user'''
+
+    authentication_classes = (JWTAuthentication,)
+
+    @authenticated
+    def create(self, request):
+        ''' POST: /api/url/ '''
+        print("here")
+        serializer = UrlSerializer(data=request.data)
+        # Check if the user input is valid
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        # create the url
+        serializer.save(user=request.user)
+        return Response(None, status=status.HTTP_201_CREATED)
+
+    @authenticated
+    def list(self, request):
+        ''' GET: /api/url/ '''
+        serializer = UrlCompactSerializer(request.user.urls.all(), many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    @authenticated
+    def retrieve(self, request, pk=None):
+        ''' GET: /api/url/<pk> '''
+        try:
+            url = request.user.urls.get(pk=pk)
+        except Url.DoesNotExist:
+            return Response({'error': 'Url does not exist'}, status=status.HTTP_404_NOT_FOUND)
+        serializer = UrlSerializer(url)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 
