@@ -79,6 +79,19 @@ class UrlRegisterViewSet(ViewSet):
         url.delete()
         return Response(None, status=status.HTTP_204_NO_CONTENT)
 
+    @authenticated
+    def reset_warnings(self, request, pk=None):
+        ''' POST: /api/url/<pk>/reset '''
+        # check if the url exists and belongs to the user
+        try:
+            url = request.user.urls.get(pk=pk)
+        except Url.DoesNotExist:
+            return Response({'error': 'Url does not exist'}, status=status.HTTP_404_NOT_FOUND)
+        # reset the warnings
+        url.warnings.all().delete()
+        url.failed_times = 0
+        url.save()
+        return Response(None, status=status.HTTP_200_OK)
 
 class WarningViewset(ViewSet):
     '''A view for working with warnings for a user'''
