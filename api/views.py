@@ -23,7 +23,7 @@ class UserRegisterViewSet(ViewSet):
         user = self.user_model.objects.create_user(**serializer.data)
         user.is_active = True
         user.save()
-        return Response({'success': 'User created successfully'}, status=status.HTTP_201_CREATED)
+        return Response(None, status=status.HTTP_201_CREATED)
 
 
 
