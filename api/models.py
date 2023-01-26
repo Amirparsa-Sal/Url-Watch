@@ -50,6 +50,6 @@ class Url(models.Model):
         return self.url
 
 class Warning(models.Model):
-    url = models.ForeignKey(Url, on_delete=models.CASCADE, related_name='requests')
+    url = models.ForeignKey(Url, on_delete=models.CASCADE, related_name='warnings')
     created_at = models.DateTimeField(auto_now_add=True)
     result_code = models.IntegerField()
