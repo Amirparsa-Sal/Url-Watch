@@ -48,3 +48,8 @@ class Url(models.Model):
 
     def __str__(self):
         return self.url
+
+class Request(models.Model):
+    url = models.ForeignKey(Url, on_delete=models.CASCADE, related_name='requests')
+    created_at = models.DateTimeField(auto_now_add=True)
+    result = models.IntegerField()
