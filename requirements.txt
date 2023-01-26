@@ -5,3 +5,4 @@ djangorestframework-simplejwt==5.2.2
 celery==5.2.7
 requests==2.28.2
 Redis==4.4.2
+mysqlclient==2.1.1
