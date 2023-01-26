@@ -1,6 +1,6 @@
 from django.urls import path
 
-from api.views import UserRegisterViewSet, UrlRegisterViewSet
+from api.views import UserRegisterViewSet, UrlRegisterViewSet, WarningViewset
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 urlpatterns = [
@@ -11,4 +11,6 @@ urlpatterns = [
     ##### URL #####
     path('url/', UrlRegisterViewSet.as_view({'put':'create', 'get':'list'}), name='url'),
     path('url/<int:pk>/', UrlRegisterViewSet.as_view({'get':'retrieve'}), name='url'),
+    ##### WARNING #####
+    path('url/<int:pk>/warning/', WarningViewset.as_view({'get':'list'}), name='warning'),
 ]
