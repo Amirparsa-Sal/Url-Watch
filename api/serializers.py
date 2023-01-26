@@ -26,7 +26,13 @@ class UrlCompactSerializer(serializers.ModelSerializer):
 class WarningSerializer(serializers.ModelSerializer):
     ''' Serializer for showing a list of warnings'''
     url_id = serializers.IntegerField(source='url.id')
+    url = serializers.SerializerMethodField()
+    
     class Meta:
         model = Warning
-        fields = ('id', 'url', 'created_at', 'result_code')
+        fields = ('id', 'url_id', 'url', 'created_at', 'result_code')
+
+    def get_url(self, obj):
+        return obj.url.url
+
         
