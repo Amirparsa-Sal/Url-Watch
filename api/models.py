@@ -37,3 +37,16 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['first_name', 'last_name']
+
+class Url(models.Model):
+    url = models.URLField(max_length=2000)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='urls')
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    count = models.IntegerField(default=0)
+    threshold = models.IntegerField()
+
+    def __str__(self):
+        return self.url
+    
+
