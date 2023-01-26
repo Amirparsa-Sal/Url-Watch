@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
-from api.models import Url
+from api.models import Url, Warning
 
 User = get_user_model()
 
@@ -22,4 +22,10 @@ class UrlCompactSerializer(serializers.ModelSerializer):
     class Meta:
         model = Url
         fields = ('id', 'url')
+
+class WarningSerializer(serializers.ModelSerializer):
+    ''' Serializer for showing a list of warnings'''
+    class Meta:
+        model = Warning
+        fields = ('id', 'created_at', 'result_code')
         
