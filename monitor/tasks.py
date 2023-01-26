@@ -6,6 +6,7 @@ from celery import shared_task
 def monitor_urls():
     # Get all urls
     urls = Url.objects.all()
+    failed = True
     for url in urls:
         # Check if we can get a response from the url
         result_code = 0
@@ -16,13 +17,19 @@ def monitor_urls():
                 url.failed_times += 1
                 url.save()
                 result_code = response.status_code
+            else:
+                failed = False
         except:
             # if we can't get a response then increase the failed times and create a warning with result_code -1
             url.failed_times += 1
             url.save()
             result_code = -1
         
+        if not failed:
+            continue
+        
         if url.url.failed_times > url.threshold:
             # if the failed times is greater than the threshold then create a warning with result_code 0
             Warning.objects.create(url=url, result_code=result_code)
+        
 
