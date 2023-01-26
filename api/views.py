@@ -6,7 +6,9 @@ from api.serializers import *
 
 
 class UserRegisterViewSet(ViewSet):
-    ''' View for registering a user'''
+    ''' POST: /api/auth/register/
+        A view for registering a user using email, first_name, last_name, and password
+    '''
     
     user_model = get_user_model()
 
