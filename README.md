@@ -6,7 +6,7 @@ This repository contains a django app to monitor URLs. Different users can sign 
 
 First you should create a `.env` file inside `url_watch` folder. The file contains the following env variables:
 
-```bash
+```
 SECRET_KEY=YourDjangoSecretKey
 
 MONITORING_INTERVAL=MonitoringIntervalSeconds
@@ -27,7 +27,7 @@ The monitoring interval is the time between each URL checks. You can enter it in
 
 FInally, you can simply run:
 
-```shell
+```
 docker-compose up -d --build
 ```
 
@@ -72,7 +72,7 @@ Example response body:
 ```json
 {
     "refresh": "ref_token",
-    "access": "acc_token"
+    "access": "acc_token"
 }
 ```
 
