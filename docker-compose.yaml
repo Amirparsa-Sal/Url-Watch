@@ -1,0 +1,66 @@
+version: '3'
+services:
+  db:
+    image: postgres:15-alpine
+    restart: always
+    ports:
+      - "5432:5432"
+    env_file:
+      - url_watch/.env
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    networks:
+      - url_monitor_net
+
+  redis:
+    image: redis:alpine
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - /tmp/app/redis:/data
+    networks:
+      - url_monitor_net
+
+  web:
+    build: .
+    restart: always
+    image: url_monitor
+    command: >
+      sh -c "python3 manage.py migrate &&
+            python3 manage.py runserver 0.0.0.0:8080"
+    ports:
+      - "8080:8080"
+    env_file:
+      - url_watch/.env
+    depends_on:
+      - db
+      - redis
+    networks:
+      - url_monitor_net
+    links:
+      - db
+      - redis
+
+  celery_worker:
+    build: .
+    image: celery_worker
+    restart: always
+    command: python3 -m celery -A url_watch worker -l info -B
+    env_file:
+      - url_watch/.env
+    depends_on:
+      - db
+      - redis
+    networks:
+      - url_monitor_net
+    links:
+      - db
+      - redis
+
+volumes:
+  postgres_data:
+
+networks:
+  url_monitor_net:
+    driver: bridge
