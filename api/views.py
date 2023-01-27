@@ -45,6 +45,9 @@ class UrlRegisterViewSet(ViewSet):
         # check if user has created 20 urls
         if request.user.urls.count() >= 20:
             return Response({'error': 'You have reached the maximum number of urls'}, status=status.HTTP_400_BAD_REQUEST)
+        # check if the url already exists for the user
+        if request.user.urls.filter(url=serializer.validated_data['url']).exists():
+            return Response({'error': 'Url already exists'}, status=status.HTTP_400_BAD_REQUEST)
         # create the url
         serializer.save(user=request.user)
         return Response(None, status=status.HTTP_201_CREATED)
